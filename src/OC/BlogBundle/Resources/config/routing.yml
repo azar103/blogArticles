@@ -1,0 +1,37 @@
+# src/OC/BlogBundle/Resources/config/routing.yml
+
+oc_blog_home:
+    path:      /{page}
+    defaults:  
+        _controller: OCBlogBundle:Article:index  
+        page : 1 
+      
+    requirements:
+        page: \d*
+        
+oc_blog_view:
+   path:    /article/{id}
+   defaults: 
+         _controller: OCBlogBundle:Article:view
+   requirements:
+         id: \d+ 
+
+oc_blog_add:
+   path: /add
+   defaults: 
+        _controller: OCBlogBundle:Article:add
+
+oc_blog_edit:
+   path: /edit/{id}   
+   defaults: 
+         _controller: OCBlogBundle:Article:edit
+   requirements:
+        id: \d+
+
+oc_blog_delete:
+   path: /delete/{id}
+   defaults: 
+        _controller: OCBlogBundle:Article:delete
+   requirements:
+        id: \d+
+

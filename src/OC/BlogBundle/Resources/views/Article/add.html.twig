@@ -1,0 +1,16 @@
+{% extends "OCBlogBundle::layout.html.twig" %}
+
+{% block title %}
+   Ajout d'une article -{{parent()}}
+{% endblock %}
+
+{% block oc_body %}
+    <h2>Ajout d'un article</h2>
+    {{ include("OCBlogBundle:Article:form.html.twig") }}
+    <p>Vous ajoutez un article </p>
+    <p>
+      <a href="{{path('oc_blog_home')}}" class="btn btn-default"><i class="glyphicon glyphicon-chevron-left"></i>
+        Retour à l'annonce  </a>
+    </p> 	
+</p>
+{% endblock %}

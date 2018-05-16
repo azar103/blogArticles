@@ -1,0 +1,11 @@
+oc_core:
+    resource: "@OCCoreBundle/Resources/config/routing.yml"
+    prefix:   /
+
+oc_blog:
+    resource: "@OCBlogBundle/Resources/config/routing.yml"
+    prefix:   /blog
+
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation

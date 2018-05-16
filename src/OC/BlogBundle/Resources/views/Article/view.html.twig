@@ -1,0 +1,60 @@
+{% extends "OCBlogBundle::layout.html.twig" %}
+{% block title %}
+    Lecture d'un article-{{parent()}}
+{% endblock %}
+
+{% block oc_body %}
+
+     <div style="float: left; margin-right: 1em;">
+    {# On vérifie qu'une image soit bien associée à l'article #}
+    {% if article.image is not null %}
+      <img src="{{ article.image.url }}" alt="{{ article.image.alt }}" height="60">
+    {% endif %}
+  </div>
+  
+    <h2>{{ article.title }}</h2>
+  <i>Par {{ article.author }}, le {{ article.date|date('d/m/Y') }}</i>
+ 
+
+
+
+  <div class="well">
+    {{ article.content }}
+  </div>
+{% if not article.categories.empty  %}
+<p>Cette annonce est parue dans les categories suivantes 
+ {% for category in article.categories %}
+  {{ category.name }}  {% if not loop.last %}, {% endif %}
+ {% endfor %}
+ </p>
+{% endif %}
+{% if listArticleSkills|length > 0 %}
+<div>
+  <p>Cette annonce requiert les comptences suivantes</p>
+ {% for articleSkill in listArticleSkills %}
+ <li> {{ articleSkill.skill.name }}  niveau :{{ articleSkill.level }}</li>
+ {% endfor %}
+</div>
+{% endif %}
+  <p>
+    <a href="{{ path('oc_blog_home') }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à la liste
+    </a>
+    <a href="{{ path('oc_blog_edit', {'id': article.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Modifier l'annonce
+    </a>
+    <a href="{{ path('oc_blog_delete', {'id': article.id}) }}" class="btn btn-danger">
+      <i class="glyphicon glyphicon-trash"></i>
+      Supprimer l'annonce
+    </a>
+  </p>
+  <h2>Commentaires :</h2>
+  {% for comment in listComments %}
+    <p>    
+    par <b>{{comment.author}} le {{comment.date |date('d/m/Y') }}</b> : <br>
+     {{comment.content}}
+    </p>
+  {% endfor %}
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "OCCoreBundle::layout.html.twig" %}
+{% block title %}
+    Articles-{{parent()}}
+{% endblock %}
+{% block body %}
+    <h1>Articles</h1>
+    <hr>
+    {% block oc_body %}
+    {% endblock %}
+{% endblock %}

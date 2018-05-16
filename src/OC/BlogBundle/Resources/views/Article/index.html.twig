@@ -1,0 +1,16 @@
+{# src/OC/BlogBundle/Resources/views/Article/index.html.twig #}
+{% extends "OCBlogBundle::layout.html.twig" %} 
+{% block title %}
+    index-{{parent()}}
+{% endblock %}
+
+{% block oc_body %}
+    <ul>
+    {% for article in listArticles  %}
+        <li>
+        	<a href="{{path('oc_blog_view', {'id': article.id }) }}">  {{article.title}} </a>
+        	par {{article.author}} le {{ article.date|date('d/m/Y') }}
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

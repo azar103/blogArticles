@@ -1,0 +1,19 @@
+{% extends "OCCoreBundle::layout.html.twig" %}
+
+{% block title %}
+    index-{{parent()}}
+{% endblock %}
+
+{% block body %}
+    <h2>Page d'accueil</h2>
+    <hr>
+    <h3>Mes derniers articles </h3> 
+     <div class="well">
+     {% for message in app.session.flashbag.get('info') %}
+        <p class="text-primary">Message flash : {{ message }}</p>
+      {% endfor %}
+    </div>
+    {{render(controller("OCBlogBundle:Article:menu", {'limit': 3}))}}
+  
+    
+{% endblock %}
