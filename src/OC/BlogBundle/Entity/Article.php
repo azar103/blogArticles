@@ -78,7 +78,7 @@ class Article
     private $nbComments;
 
     /**
-     *@Gedm\Slug(fields={"title"})
+     *@Gedmo\Slug(fields={"title"})
      *@ORM\Column(name="slug" , type="string", length=255, unique=true)
      */  
     private $slug;
@@ -383,5 +383,29 @@ class Article
     public function decreaseComments()
     {
         $this->nbComments--;
+    }
+
+    /**
+     * Set slug.
+     *
+     * @param string $slug
+     *
+     * @return Article
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get slug.
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 }

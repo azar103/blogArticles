@@ -4,6 +4,8 @@ namespace OC\BlogBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
 /**
  * ArticleRepository
  *
@@ -73,13 +75,30 @@ class ArticleRepository extends \Doctrine\ORM\EntityRepository
 	{
        $qb = $this->createQueryBuilder('a')
                   ->innerJoin('a.categories','c')
-                  ->Select('c')
+                  ->addSelect('c')
                    ;
 
        $qb->where($qb->expr()->in('c.name',$categoryNames));
        return $qb->getQuery()
                   ->getResult();            
 	}
+
+  public function getArticles($page, $nbPerPages)
+  {
+    $query = $this->createQueryBuilder('a')
+               ->leftJoin('a.image','i')
+               ->addSelect('i')
+               ->leftJoin('a.categories','cat')
+               ->addSelect('cat')
+               ->orderBy('a.date','DESC')
+               ->getQuery()
+               ;
+
+    
+    $query->setFirstResult(($page - 1)* $nbPerPages)
+           ->setMaxResults($nbPerPages); 
+    return new Paginator($query, true);        
+  }
 
 
 }

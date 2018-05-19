@@ -3,7 +3,7 @@
 namespace OC\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Article
  *
@@ -76,6 +76,12 @@ class Article
      *@ORM\Column(name="nb_comments", type="integer")
      */
     private $nbComments;
+
+    /**
+     *@Gedmo\Slug(fields={"title"})
+     *@ORM\Column(name="slug" , type="string", length=255, unique=true)
+     */  
+    private $slug;
 
     public function __construct()
     {
@@ -343,13 +349,39 @@ class Article
     }
 
 
-    public function increaseComments()
+   
+
+    /**
+     * Set nbComments.
+     *
+     * @param int $nbComments
+     *
+     * @return Article
+     */
+    public function setNbComments($nbComments)
     {
-        $this->nbApplications++;
+        $this->nbComments = $nbComments;
+
+        return $this;
+    }
+
+    /**
+     * Get nbComments.
+     *
+     * @return int
+     */
+    public function getNbComments()
+    {
+        return $this->nbComments;
+    }
+
+     public function increaseComments()
+    {
+        $this->nbComments++;
     }
 
     public function decreaseComments()
     {
-        $this->nbApplications--;
+        $this->nbComments--;
     }
 }

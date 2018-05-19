@@ -15,42 +15,30 @@ class ArticleController extends Controller
 {
     public function indexAction($page)
     {
-    	 if ($page < 1) {
+      if($page < 1)
+      {
+        throw $this->createNotFoundException("La page ".$page." n'existe pas.");
+      }
+      $em = $this->getDoctrine()->getManager();
+       
+      $nbPerPage = 3;
+       $listArticles = $em->getRepository('OCBlogBundle:Article')->getArticles($page,$nbPerPage);
+      $nbPages = ceil(count($listArticles)/$nbPerPage);
+
+    	 if ($page > $nbPages) {
       throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
       }
 
-      $listArticles = array(
-            array(
-                'id' => 1,
-                'title' => 'Mon dernier Weekend !',
-                'author' => 'Mathieu',
-                'content' => 'mon dernier weeken etatit formidable',
-                'date' => new \DateTime()
-
-            ),
-
-            array(
-               'id' => 2,
-               'title' => 'Sortie de Symfony 2.1',
-               'author' => 'Jack',
-               'content' => "C'est la deronère version de framework Symfony",
-               'date' => new \DateTime()
-              
-            ),
-            array(
-               'id' => 3,
-               'title' => 'test',
-               'author' => 'Bernard',
-               'content' => 'test test test test grrrr !',
-               'date' => new \DateTime()
-            )
-        );		
+    
         //verifier l'existence de la page
-     
+  
 
     	//recuperer la liste d'annonces 
         return $this->render('OCBlogBundle:Article:index.html.twig', 
-        	       array('listArticles' => $listArticles)
+        	       array('listArticles' => $listArticles,
+                       'nbPages'=>$nbPages,
+                       'page' =>$page
+                      )
         	   );
 
      
@@ -80,56 +68,7 @@ class ArticleController extends Controller
     public function addAction(Request $request)
     {
        
-       $em = $this->getDoctrine()->getManager();
-       $article = new Article();
-       $article->setTitle('Mon dernier weekend!');
-       $article->setAuthor("C'était vraiment super et on s'est bien amusé.");
-       $article->setContent("C'est un petit test !.");
-       
-       $image = new Image();
-       $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
-       $image->setAlt('weekend');
-
-       $article->setImage($image);
-       //création d'un premier commentaire
-       $comment1= new Comment();
-       $comment1->setAuthor('winzou');
-       $comment1->setContent('on veut les photos !');
-       //création d'un dexuième commentaire
-
-       $comment2 = new Comment();
-       $comment2->setAuthor('Choupy');
-       $comment2->setContent('Les photos arrivent');
-       
-       $comment1->setArticle($article);
-       $comment2->setArticle($article);
-
-
-       $listSkills = $em->getRepository('OCBlogBundle:Skill')->findAll();
-
-       foreach ($listSkills as $skill) {
-           $articleSkill = new ArticleSkill();
-           $articleSkill->setArticle($article);
-           $articleSkill->setSkill($skill);
-           $articleSkill->setLevel('Expert');
-
-           $em->persist($articleSkill);
-       }
-
-
-       $em = $this->getDoctrine()->getManager();
-       //persister un article
-       $em->persist($article);
-       //persister le premier commentaire
-       $em->persist($comment1);
-       //persister le deuxième commentaire
-       $em->persist($comment2);
-
-
-       
-
-       $em->flush();
-
+     
 
        if ($request->isMethod('POST'))
        {
@@ -145,12 +84,12 @@ class ArticleController extends Controller
     {
       $em = $this->getDoctrine()->getManager();
 
-     // On récupère l'annonce
+     // On récupère l'article
     $article = $em->getRepository('OCBlogBundle:Article')->find($id);
     // on récuper toute les categories de la base de donnée  
     $listCategories = $em->getRepository('OCBlogBundle:Category')->findAll();
   
-    //on ajoute les categories à l'annonce
+    //on ajoute les categories à l'article
     foreach ($listCategories as $category) {
      $article->addCategory($category);
     }
@@ -182,26 +121,17 @@ class ArticleController extends Controller
     	return $this->render('OCBlogBundle:Article:delete.html.twig');
     }
 
-    public function menuAction()
+    public function menuAction($limit)
     {
-        $listArticles = array(
-            array(
-                'id' => 1,
-                'title' => 'Mon dernier Weekend !'
-
-            ),
-
-            array(
-               'id' => 2,
-               'title' => 'Sortie de Symfony 2.1'
-              
-            ),
-            array(
-               'id' => 3,
-               'title' => 'test'
-            )
-        );	
-
+      $em = $this->getDoctrine()->getManager();
+      $listArticles = $em->getRepository('OCBlogBundle:Article')
+                      ->findBy(
+                               array(),
+                               array('date' => 'DESC'),
+                               $limit,
+                               0  
+                             );
+     
         return $this->render('OCBlogBundle:Article:menu.html.twig', array('listArticles' => $listArticles));
     }
 }
